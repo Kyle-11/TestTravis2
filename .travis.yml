@@ -12,7 +12,7 @@ matrix:
             - ['g++-4.8']
       env: CXX=g++-4.8
       before_install: 
-            - CXX=g++-4.8
+             - CXX=g++-4.8
 	       - chmod +x build.sh
             - chmod +x get_code_cov.sh
 

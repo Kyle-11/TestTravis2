@@ -11,11 +11,7 @@ matrix:
           packages:
             - ['g++-4.8']
       env: CXX=g++-4.8
-      before_install: 
-             - CXX=g++-4.8
-	       - chmod +x build.sh
-            - chmod +x get_code_cov.sh
-
+      before_install: CXX=g++-4.8
 
     - os: linux
       compiler: gcc
@@ -46,9 +42,6 @@ matrix:
       env: CXX=g++-5
       before_install:
         - CXX=g++-5
-  	   - chmod +x build.sh
-        - chmod +x get_code_cov.sh
-
 
     - os: linux
       compiler: clang++-3.5
@@ -59,11 +52,7 @@ matrix:
             - ['clang-3.5']
             - ['libglm-dev']
       env: CXX=clang++-3.5
-      before_install: 
-		- CXX=clang++-3.5
-	      - chmod +x build.sh
-           - chmod +x get_code_cov.sh
-
+      before_install: CXX=clang++-3.5
 
     - os: linux
       compiler: clang++-3.6
@@ -73,10 +62,7 @@ matrix:
           packages:
             - ['clang-3.6']
       env: CXX=clang++-3.6
-      before_install: 
-	       - CXX=clang++-3.6
-            - chmod +x build.sh
-            - chmod +x get_code_cov.sh
+      before_install: CXX=clang++-3.6
 
     - os: linux
       compiler: clang++-3.7
@@ -86,9 +72,20 @@ matrix:
           packages:
             - ['clang-3.7']
       env: CXX=clang++-3.7
-      before_install: 
- 		- CXX=clang++-3.7
-	     - chmod +x build.sh
-  		- chmod +x get_code_cov.sh
+      before_install: CXX=clang++-3.7
+
+    - os: osx
+      compiler: clang
+      env: CXX=clang++ V='Apple LLVM 6.0' # Apple LLVM version 6.0 (clang-600.0.54) (based on LLVM 3.5svn)
+      before_install:
+        - CXX=clang++ V='Apple LLVM 6.0'
+
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+      env: CXX=clang++ V='Apple LLVM 7.0.0' # Apple LLVM version 7.0.0 (clang-700.0.72)
+      before_install:
+        - CXX=clang++ V='Apple LLVM 7.0.0'
+
 script:
   - make clear all run

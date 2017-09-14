@@ -1,91 +1,23 @@
-sudo: false
+sudo: require
 language: cpp
+compiler: gcc
 
-matrix:
-  include:
-    - os: linux
-      compiler: gcc
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages:
-            - ['g++-4.8']
-      env: CXX=g++-4.8
-      before_install: CXX=g++-4.8
+before_install:
+  - chmod +x build.sh
+  - chmod +x get_code_cov.sh
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
 
-    - os: linux
-      compiler: gcc
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages:
-            - ['g++-4.9']
-            - ['libglm-dev']
-            - ['python3']
-            - ['lcov']
-      env: CXX=g++-4.9
-      before_install:
-        - CXX=g++-4.9
-        - alias gcov=gcov-5
-        - pip install --user requests[security]
-        - pip install --user cpp-coveralls
-      after_success:
-        - coveralls --gcov gcov-4.9 --exclude gtest --verbose --gcov-options '\-lp'
+install: 
+  - sudo apt-get install -qq g++-5
+  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
 
-    - os: linux
-      compiler: gcc
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages:
-            - ['g++-5']
-      env: CXX=g++-5
-      before_install:
-        - CXX=g++-5
+script: 
+  - ./build.sh
+  - ./travis_qmake_gcc_cpp11_gcov
+  - ./get_code_cov.sh
 
-    - os: linux
-      compiler: clang++-3.5
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.5']
-          packages:
-            - ['clang-3.5']
-            - ['libglm-dev']
-      env: CXX=clang++-3.5
-      before_install: CXX=clang++-3.5
+after_success: 
+  - bash <(curl -s https://codecov.io/bash)
+  - mkdir build && cd build && cmake -DCOVERALLS=ON -                 DCMAKE_BUILD_TYPE=Debug .. && cmake --build . && cmake --build . --target coveralls
 
-    - os: linux
-      compiler: clang++-3.6
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6']
-          packages:
-            - ['clang-3.6']
-      env: CXX=clang++-3.6
-      before_install: CXX=clang++-3.6
-
-    - os: linux
-      compiler: clang++-3.7
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
-          packages:
-            - ['clang-3.7']
-      env: CXX=clang++-3.7
-      before_install: CXX=clang++-3.7
-
-    - os: osx
-      compiler: clang
-      env: CXX=clang++ V='Apple LLVM 6.0' # Apple LLVM version 6.0 (clang-600.0.54) (based on LLVM 3.5svn)
-      before_install:
-        - CXX=clang++ V='Apple LLVM 6.0'
-
-    - os: osx
-      osx_image: xcode7
-      compiler: clang
-      env: CXX=clang++ V='Apple LLVM 7.0.0' # Apple LLVM version 7.0.0 (clang-700.0.72)
-      before_install:
-        - CXX=clang++ V='Apple LLVM 7.0.0'
-
-script:
-  - make clear all run

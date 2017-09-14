@@ -4,6 +4,7 @@ compiler: gcc
 
 before_install:
   - chmod +x build.sh
+  - chmod +x get_code_cov.sh
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
 

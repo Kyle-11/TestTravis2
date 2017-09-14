@@ -3,6 +3,7 @@ language: cpp
 compiler: gcc
 
 before_install:
+  - chmod +x build.sh
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
 

@@ -19,5 +19,4 @@ script:
 
 after_success: 
   - bash <(curl -s https://codecov.io/bash)
-  - mkdir build && cd build && cmake -DCOVERALLS=ON -                 DCMAKE_BUILD_TYPE=Debug .. && cmake --build . && cmake --build . --target coveralls
-
+  

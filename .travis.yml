@@ -340,6 +340,12 @@ script:
 
 
 before_install:
+  - chmod +x hello_world.cpp
+  - chmod +x how_captures_work.cpp
+  - chmod +x how_subcases_work.cpp
+  - chmod +x how_exception_translators_work.cpp
+  - chmod +x test.cpp
+  - chmod +x doctest_main.cpp
   - chmod +x build.sh
   - chmod +x get_code_cov.sh
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test

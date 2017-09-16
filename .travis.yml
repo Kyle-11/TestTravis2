@@ -11,5 +11,6 @@ install:
     - python setup.py --quiet install
 
 script:
+    - chmod +x test.bash
     - nosetests
     - ./test.bash

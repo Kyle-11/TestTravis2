@@ -1,108 +1,24 @@
-Upload C/C++ coverage report to coveralls.io
-=============
-
-[![PyPI version](https://badge.fury.io/py/cpp-coveralls.svg)](http://badge.fury.io/py/cpp-coveralls) [![Build Status](https://travis-ci.org/eddyxu/cpp-coveralls.svg?branch=master)](https://travis-ci.org/eddyxu/cpp-coveralls) [![Code Quality](https://landscape.io/github/eddyxu/cpp-coveralls/master/landscape.svg)](https://landscape.io/github/eddyxu/cpp-coveralls/master)
-
-Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), it uploads the coverage report of C/C++ project to [coveralls.io](https://coveralls.io/)
-
-# Instructions
-
- * Build your project with [gcov support](http://gcc.gnu.org/onlinedocs/gcc/Gcov.html)
- * Run tests
- * Run `coveralls`
-
-## Environment variables
-
-`cpp-coveralls` recognizes the following environment variables:
-- `COVERALLS_REPO_TOKEN`
-- `COVERALLS_ENDPOINT`
-- `COVERALLS_PARALLEL`
+# DownloadProject
 
 
-## Usage:
+Platform | Build status
+---------|-------------:
+Linux<br>Mac OSX | [![Build Status](https://travis-ci.org/Crascit/DownloadProject.svg?branch=master)](https://travis-ci.org/Crascit/DownloadProject)
+Windows (VS2015) | [![Build status](https://ci.appveyor.com/api/projects/status/1qdjq4fpef25tftw/branch/master?svg=true)](https://ci.appveyor.com/project/Crascit/downloadproject/branch/master)
 
-```
-$ coveralls -h
-usage: coveralls [-h] [--verbose] [--dryrun] [--gcov FILE]
-                 [--gcov-options GCOV_OPTS] [-r DIR] [-b DIR] [-e DIR|FILE]
-                 [-i DIR|FILE] [-E REGEXP] [-x EXT] [-y FILE] [-n] [-t TOKEN]
-                 [--encodings ENCODINGS [ENCODINGS ...]] [--dump [FILE]]
+This repository contains a generalized implementation for downloading an
+external project's source at CMake's configure step rather than as part
+of the main build. The primary advantage of this is that the project's source
+code can then be included directly in the main CMake build using the
+add_subdirectory() command, making all of the external project's targets,
+etc. available without any further effort. The technique is fully explained
+in the article available at:
 
-optional arguments:
-  -h, --help            show this help message and exit
-  --verbose             print verbose messages
-  --dryrun              run coveralls without uploading report
-  --gcov FILE           set the location of gcov
-  --gcov-options GCOV_OPTS
-                        set the options given to gcov
-  -r DIR, --root DIR    set the root directory
-  -b DIR, --build-root DIR
-                        set the directory from which gcov will be called; by
-                        default gcov is run in the directory of the .o files;
-                        however the paths of the sources are often relative to
-                        the directory from which the compiler was run and
-                        these relative paths are saved in the .o file; when
-                        this happens, gcov needs to run in the same directory
-                        as the compiler in order to find the source files
-  -e DIR|FILE, --exclude DIR|FILE
-                        set exclude file or directory
-  -i DIR|FILE, --include DIR|FILE
-                        set include file or directory
-  -E REGEXP, --exclude-pattern REGEXP
-                        set exclude file/directory pattern
-  --exclude-lines-pattern REGEXP
-                        set exclude lines pattern
-  -x EXT, --extension EXT
-                        set extension of files to process
-  -y FILE, --coveralls-yaml FILE
-                        coveralls yaml file name (default: .coveralls.yml)
-  -n, --no-gcov         do not run gcov
-  -t TOKEN, --repo-token TOKEN, --repo_token TOKEN
-                        set the repo_token of this project, alternatively you
-                        can set the environmental variable
-                        COVERALLS_REPO_TOKEN
-  --encodings ENCODINGS [ENCODINGS ...]
-                        source encodings to try in order of preference
-                        (default: ['utf-8', 'latin-1'])
-  --dump [FILE]         dump JSON payload to a file
-```
+https://crascit.com/2015/07/25/cmake-gtest/
 
-## Example `.travis.yml`
+An example as described in that article is provided here to demonstrate
+how to use the DownloadProject module. It uses [googletest][1] as the
+example, downloading and building trivial gtest and gmock test cases
+to show the technique.
 
-### Linux
-
-Install `cpp-coveralls` with `pip`, add *gcov* to your compilation option, compile, run your test and send the result to http://coveralls.io :
-```
-language: cpp
-compiler:
-  - gcc
-before_install:
-  - pip install --user cpp-coveralls
-script:
-  - ./configure --enable-gcov && make && make check
-after_success:
-  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
-```
-
-### OS X
-
-*Python* on *OS X* can be a bit of a hassle so you need to install to set up your custom environment:
-
-```
-language: objective-c
-compiler:
-  - gcc
-before_install:
-  - brew update
-  - brew install pyenv
-  - eval "$(pyenv init -)"
-  - pyenv install 2.7.6
-  - pyenv global 2.7.6
-  - pyenv rehash
-  - pip install cpp-coveralls
-  - pyenv rehash
-script:
-  - ./configure --enable-gcov && make && make check
-after_success:
-  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
-```
+[1]: https://github.com/google/googletest

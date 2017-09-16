@@ -1,16 +1,21 @@
-language: python
+# Need these for a more recent CMake on Linux
+sudo: required
+dist: trusty
 
-python:
-    - "2.7"
-    - "pypy"
-    - "3.3"
-    - "3.4"
-    - "3.5"
+os:
+  - linux
+  - osx
 
-install:
-    - python setup.py --quiet install
+language: cpp
+
+before_script:
+  - mkdir build
+  - cd build
+  - cmake ..
 
 script:
-    - chmod +x test.bash
-    - nosetests
-    - ./test.bash
+  - cmake --build .
+
+after_script:
+  - cmake --build . --target test
+

@@ -3,7 +3,7 @@
 //Returns the value of x multiplied by 2, except for 42, which is multiplied by one
 int do_magic(const int x)
 {
-  if (x == 42)
+  if (x ==  42)
   {
     return 42;
   }

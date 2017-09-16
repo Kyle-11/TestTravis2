@@ -1,23 +1,108 @@
-# arduino-toolbox
+Upload C/C++ coverage report to coveralls.io
+=============
 
-| Branch | CI | Coverage |
-|---|---|---|
-| master | [![Build Status](https://travis-ci.org/ticapix/arduino-toolbox.svg?branch=master)](https://travis-ci.org/ticapix/arduino-toolbox) | [![Coverage Status](https://coveralls.io/repos/ticapix/arduino-toolbox/badge.png?branch=master)](https://coveralls.io/r/ticapix/arduino-toolbox?branch=master) |
+[![PyPI version](https://badge.fury.io/py/cpp-coveralls.svg)](http://badge.fury.io/py/cpp-coveralls) [![Build Status](https://travis-ci.org/eddyxu/cpp-coveralls.svg?branch=master)](https://travis-ci.org/eddyxu/cpp-coveralls) [![Code Quality](https://landscape.io/github/eddyxu/cpp-coveralls/master/landscape.svg)](https://landscape.io/github/eddyxu/cpp-coveralls/master)
+
+Inspired from [z4r/python-coveralls](https://github.com/z4r/python-coveralls), it uploads the coverage report of C/C++ project to [coveralls.io](https://coveralls.io/)
+
+# Instructions
+
+ * Build your project with [gcov support](http://gcc.gnu.org/onlinedocs/gcc/Gcov.html)
+ * Run tests
+ * Run `coveralls`
+
+## Environment variables
+
+`cpp-coveralls` recognizes the following environment variables:
+- `COVERALLS_REPO_TOKEN`
+- `COVERALLS_ENDPOINT`
+- `COVERALLS_PARALLEL`
 
 
-##  [RingBuffer](/RingBuffer/)
+## Usage:
 
-Simple `RingBuffer<Size, Type>` class with a specialization for `StringBuffer<Size>`
+```
+$ coveralls -h
+usage: coveralls [-h] [--verbose] [--dryrun] [--gcov FILE]
+                 [--gcov-options GCOV_OPTS] [-r DIR] [-b DIR] [-e DIR|FILE]
+                 [-i DIR|FILE] [-E REGEXP] [-x EXT] [-y FILE] [-n] [-t TOKEN]
+                 [--encodings ENCODINGS [ENCODINGS ...]] [--dump [FILE]]
 
-## [AsyncComm](/AsyncComm/)
+optional arguments:
+  -h, --help            show this help message and exit
+  --verbose             print verbose messages
+  --dryrun              run coveralls without uploading report
+  --gcov FILE           set the location of gcov
+  --gcov-options GCOV_OPTS
+                        set the options given to gcov
+  -r DIR, --root DIR    set the root directory
+  -b DIR, --build-root DIR
+                        set the directory from which gcov will be called; by
+                        default gcov is run in the directory of the .o files;
+                        however the paths of the sources are often relative to
+                        the directory from which the compiler was run and
+                        these relative paths are saved in the .o file; when
+                        this happens, gcov needs to run in the same directory
+                        as the compiler in order to find the source files
+  -e DIR|FILE, --exclude DIR|FILE
+                        set exclude file or directory
+  -i DIR|FILE, --include DIR|FILE
+                        set include file or directory
+  -E REGEXP, --exclude-pattern REGEXP
+                        set exclude file/directory pattern
+  --exclude-lines-pattern REGEXP
+                        set exclude lines pattern
+  -x EXT, --extension EXT
+                        set extension of files to process
+  -y FILE, --coveralls-yaml FILE
+                        coveralls yaml file name (default: .coveralls.yml)
+  -n, --no-gcov         do not run gcov
+  -t TOKEN, --repo-token TOKEN, --repo_token TOKEN
+                        set the repo_token of this project, alternatively you
+                        can set the environmental variable
+                        COVERALLS_REPO_TOKEN
+  --encodings ENCODINGS [ENCODINGS ...]
+                        source encodings to try in order of preference
+                        (default: ['utf-8', 'latin-1'])
+  --dump [FILE]         dump JSON payload to a file
+```
 
-Class helper for async communication over `HardwareSerial`, `SoftwareSerial` or any object exposing `read`, `write`, `available` methods.
+## Example `.travis.yml`
 
-## [GPRS](/GPRS/)
+### Linux
 
-A class for communicating with a GSM/GPRS modem like the popular SIM900 used in many Arduino and Seeeduino shield.
+Install `cpp-coveralls` with `pip`, add *gcov* to your compilation option, compile, run your test and send the result to http://coveralls.io :
+```
+language: cpp
+compiler:
+  - gcc
+before_install:
+  - pip install --user cpp-coveralls
+script:
+  - ./configure --enable-gcov && make && make check
+after_success:
+  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+```
 
-## Tests
+### OS X
 
-All toolboxs are unit-tested using `GTest` and `GMock` frameworks.
+*Python* on *OS X* can be a bit of a hassle so you need to install to set up your custom environment:
 
+```
+language: objective-c
+compiler:
+  - gcc
+before_install:
+  - brew update
+  - brew install pyenv
+  - eval "$(pyenv init -)"
+  - pyenv install 2.7.6
+  - pyenv global 2.7.6
+  - pyenv rehash
+  - pip install cpp-coveralls
+  - pyenv rehash
+script:
+  - ./configure --enable-gcov && make && make check
+after_success:
+  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+```

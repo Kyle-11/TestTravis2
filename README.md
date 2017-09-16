@@ -1,67 +1,24 @@
-[![Build Status](https://travis-ci.org/bast/gtest-demo.svg?branch=master)](https://travis-ci.org/bast/gtest-demo/builds)
-[![Coverage Status](https://coveralls.io/repos/bast/gtest-demo/badge.png?branch=master)](https://coveralls.io/r/bast/gtest-demo?branch=master)
-[![License](https://img.shields.io/badge/license-%20BSD--3-blue.svg)](../master/LICENSE)
+# DownloadProject
 
 
-# gtest-demo
+Platform | Build status
+---------|-------------:
+Linux<br>Mac OSX | [![Build Status](https://travis-ci.org/Crascit/DownloadProject.svg?branch=master)](https://travis-ci.org/Crascit/DownloadProject)
+Windows (VS2015) | [![Build status](https://ci.appveyor.com/api/projects/status/1qdjq4fpef25tftw/branch/master?svg=true)](https://ci.appveyor.com/project/Crascit/downloadproject/branch/master)
 
-C/C++ unit test demo using [Google Test](https://code.google.com/p/googletest) deployed to
-[Travis-CI](https://travis-ci.org/bast/gtest-demo/builds) with test coverage
-deployed to [Coveralls](https://coveralls.io/r/bast/gtest-demo).
+This repository contains a generalized implementation for downloading an
+external project's source at CMake's configure step rather than as part
+of the main build. The primary advantage of this is that the project's source
+code can then be included directly in the main CMake build using the
+add_subdirectory() command, making all of the external project's targets,
+etc. available without any further effort. The technique is fully explained
+in the article available at:
 
-- [Build and test history](https://travis-ci.org/bast/gtest-demo/builds)
-- [Code coverage](https://coveralls.io/r/bast/gtest-demo)
-- Licensed under [BSD-3](../master/LICENSE)
+https://crascit.com/2015/07/25/cmake-gtest/
 
+An example as described in that article is provided here to demonstrate
+how to use the DownloadProject module. It uses [googletest][1] as the
+example, downloading and building trivial gtest and gmock test cases
+to show the technique.
 
-## How to build this demo
-
-```sh
-git clone --recursive https://github.com/bast/gtest-demo.git
-cd gtest-demo
-mkdir build
-cd build
-cmake ..
-make
-```
-
-
-## Running the tests
-
-Either using `make test`:
-```
-$ make test
-
-Running tests...
-Test project /home/user/gtest-demo/build
-    Start 1: unit
-1/1 Test #1: unit .............................   Passed    0.00 sec
-
-100% tests passed, 0 tests failed out of 1
-
-Total Test time (real) =   0.00 sec
-```
-
-Or directly using `unit_tests`:
-```
-$ ./unit_tests
-
-[==========] Running 2 tests from 1 test case.
-[----------] Global test environment set-up.
-[----------] 2 tests from example
-[ RUN      ] example.add
-[       OK ] example.add (0 ms)
-[ RUN      ] example.subtract
-[       OK ] example.subtract (0 ms)
-[----------] 2 tests from example (1 ms total)
-
-[----------] Global test environment tear-down
-[==========] 2 tests from 1 test case ran. (1 ms total)
-[  PASSED  ] 2 tests.
-
-```
-
-
-## Acknowledgments
-
-Container Travis setup thanks to [Joan Massich](https://github.com/massich).
+[1]: https://github.com/google/googletest

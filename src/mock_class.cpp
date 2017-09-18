@@ -1,4 +1,4 @@
-#include "example.h"
+#include "mock_class.h"
 
 double add_numbers(const double f1, const double f2)
 {

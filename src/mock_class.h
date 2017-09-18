@@ -1,5 +1,5 @@
-#ifndef EXAMPLE_H_INCLUDED
-#define EXAMPLE_H_INCLUDED
+#ifndef MOCK_CLASS_H_INCLUDED
+#define MOCK_CLASS_H_INCLUDED
 
 double add_numbers(const double f1, const double f2);
 

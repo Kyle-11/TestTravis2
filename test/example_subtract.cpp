@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "example.h"
+#include "mock_class.h"
 
 TEST(example, subtract)
 {

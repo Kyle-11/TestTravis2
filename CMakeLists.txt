@@ -10,8 +10,8 @@ include_directories(
     )
 
 add_library(
-    example
-    src/example.cpp
+    mock_class
+    src/mock_class.cpp
     )
 
 set(GOOGLETEST_ROOT external/googletest/googletest CACHE STRING "Google Test source root")
@@ -44,7 +44,7 @@ add_dependencies(unit_tests googletest)
 target_link_libraries(
     unit_tests
     googletest
-    example
+    mock_class
     pthread
     )
 

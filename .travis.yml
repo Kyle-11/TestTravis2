@@ -185,83 +185,6 @@ matrix:
           packages: ["clang-5.0", "valgrind", "g++-multilib", "libc6-dbg", "libc6-dbg:i386", "g++-6"]
           sources: *apt_sources
 
-    # Xcode 6.4 Clang
-    - env: COMPILER=clang++
-      osx_image: xcode6.4
-      os: osx
-
-    # Xcode 7.3 Clang
-    - env: COMPILER=clang++ HAS_ASAN_32=true HAS_ASAN_64=true
-      osx_image: xcode7.3
-      os: osx
-
-    # Xcode 8 Clang
-    - env: COMPILER=clang++ HAS_ASAN_32=true HAS_ASAN_64=true
-      osx_image: xcode8
-      os: osx
-
-    # Xcode 8.1 Clang
-    - env: COMPILER=clang++ HAS_ASAN_32=true HAS_ASAN_64=true
-      osx_image: xcode8.1
-      os: osx
-
-    # Xcode 8.2 Clang
-    - env: COMPILER=clang++ HAS_ASAN_32=true HAS_ASAN_64=true
-      osx_image: xcode8.2
-      os: osx
-
-    # Xcode 8.3 Clang
-    - env: COMPILER=clang++ HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true
-      osx_image: xcode8.3
-      os: osx
-
-    # OSX GCC 4.6
-    - env: COMPILER=g++-4.6
-      compiler: gcc
-      osx_image: xcode6.4
-      os: osx
-
-    # OSX GCC 4.7
-    - env: COMPILER=g++-4.7
-      compiler: gcc
-      osx_image: xcode6.4
-      os: osx
-
-    # OSX GCC 4.8
-    - env: COMPILER=g++-4.8 HAS_ASAN_32=true HAS_ASAN_64=true
-      compiler: gcc
-      osx_image: xcode6.4
-      os: osx
-
-    # OSX GCC 4.9
-    - env: COMPILER=g++-4.9 HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true # no ASAN_32 - errors when using ASAN_OPTIONS - probably g++ 4.9 bug
-      compiler: gcc
-      osx_image: xcode6.4
-      os: osx
-
-    # OSX GCC 5
-    - env: COMPILER=g++-5 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true
-      compiler: gcc
-      osx_image: xcode7.3
-      os: osx
-
-    # OSX GCC 6
-    - env: COMPILER=g++-6 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true
-      compiler: gcc
-      osx_image: xcode7.3
-      os: osx
-
-    # OSX GCC 7
-    - env: COMPILER=g++-7 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true
-      compiler: gcc
-      osx_image: xcode7.3
-      os: osx
-
-    # OSX LLVM-GCC
-    - env: COMPILER=g++ HAS_ASAN_32=true HAS_ASAN_64=true
-      compiler: gcc
-      os: osx
-
   allow_failures:
 
     # GCC 4.5
@@ -274,23 +197,6 @@ matrix:
     # Clang 3.9
     - env: COMPILER=clang++-3.9 HAS_ASAN_64=true HAS_UBSAN_64=true
 
-    # OSX GCC 4.8
-    - env: COMPILER=g++-4.8 HAS_ASAN_32=true HAS_ASAN_64=true
-      compiler: gcc
-      osx_image: xcode6.4
-      os: osx
-
-    # OSX GCC 6
-    - env: COMPILER=g++-6 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true
-      compiler: gcc
-      osx_image: xcode7.3
-      os: osx
-
-    # OSX GCC 7
-    - env: COMPILER=g++-7 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true
-      compiler: gcc
-      osx_image: xcode7.3
-      os: osx
 
 install:
   - if [[ "${CODE_COVERAGE}" == "true" ]]; then gem install coveralls-lcov ; fi

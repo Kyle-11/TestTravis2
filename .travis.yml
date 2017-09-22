@@ -48,6 +48,10 @@ addons:
 compiler: clang
 os: linux
 
+before_install:
+  - pip install --user cpp-coveralls
+
+
 matrix:
   include:
     # coverage
@@ -369,3 +373,5 @@ script:
 
 #after_script:
 #  - cat compile_commands.json
+after_success:
+  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"

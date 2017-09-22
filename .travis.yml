@@ -276,6 +276,12 @@ before_script:
 
 script:
   # coverage
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make
+  - ./unit_tests
+
   - |
     if [[ "${CODE_COVERAGE}" = "true" ]]; then
       cmake ${CMAKE_OPTIONS_GLOBAL} ${CMAKE_OPTIONS} -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_CXX_FLAGS="-fprofile-arcs -ftest-coverage -std=c++98" -DCMAKE_BUILD_TYPE=Debug . || exit 1
@@ -368,4 +374,5 @@ script:
 #  - ccache -s
 
 #after_script:
+  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
 #  - cat compile_commands.json

@@ -371,3 +371,6 @@ script:
 
 #after_script:
 #  - cat compile_commands.json
+
+after_success:
+  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"

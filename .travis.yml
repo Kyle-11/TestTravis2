@@ -48,10 +48,6 @@ addons:
 compiler: clang
 os: linux
 
-before_install:
-  - pip install --user cpp-coveralls
-
-
 matrix:
   include:
     # coverage
@@ -68,6 +64,77 @@ matrix:
           packages: ["clang-4.0", "clang-tidy-4.0", "cppcheck"]
           sources: *apt_sources
 
+    # GCC 4.4
+    - env: COMPILER=g++-4.4
+      compiler: gcc
+      addons: &gcc44
+        apt:
+          packages: ["g++-4.4", "valgrind", "g++-4.4-multilib", "libc6-dbg", "libc6-dbg:i386"]
+          sources: *apt_sources
+
+    # GCC 4.5
+    - env: COMPILER=g++-4.5
+      compiler: gcc
+      addons: &gcc45
+        apt:
+          packages: ["g++-4.5", "valgrind", "g++-4.5-multilib", "libc6-dbg", "libc6-dbg:i386"]
+          sources: *apt_sources
+
+    # GCC 4.6
+    - env: COMPILER=g++-4.6
+      compiler: gcc
+      addons: &gcc46
+        apt:
+          packages: [           "valgrind", "g++-4.6-multilib", "libc6-dbg", "libc6-dbg:i386"]
+          sources: *apt_sources
+
+    # GCC 4.7
+    - env: COMPILER=g++-4.7
+      compiler: gcc
+      addons: &gcc47
+        apt:
+          packages: ["g++-4.7", "valgrind", "g++-4.7-multilib", "libc6-dbg", "libc6-dbg:i386"]
+          sources: *apt_sources
+
+    # GCC 4.8
+    - env: COMPILER=g++-4.8 HAS_ASAN_32=true HAS_ASAN_64=true
+      compiler: gcc
+      addons: &gcc48
+        apt:
+          packages: ["g++-4.8", "valgrind", "g++-4.8-multilib", "libc6-dbg", "libc6-dbg:i386"]
+          sources: *apt_sources
+
+    # GCC 4.9
+    - env: COMPILER=g++-4.9 HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true # no ASAN_32 - errors when using ASAN_OPTIONS - probably g++ 4.9 bug
+      compiler: gcc
+      addons: &gcc49
+        apt:
+          packages: ["g++-4.9", "valgrind", "g++-4.9-multilib", "libc6-dbg", "libc6-dbg:i386"]
+          sources: *apt_sources
+
+    # GCC 5
+    - env: COMPILER=g++-5 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true ADDITIONAL_CXX_FLAGS=" -fuse-ld=gold"
+      compiler: gcc
+      addons: &gcc5
+        apt:
+          packages: ["g++-5",   "valgrind", "g++-5-multilib",   "libc6-dbg", "libc6-dbg:i386"]
+          sources: *apt_sources
+
+    # GCC 6
+    - env: COMPILER=g++-6 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true ADDITIONAL_CXX_FLAGS=" -fuse-ld=gold"
+      compiler: gcc
+      addons: &gcc6
+        apt:
+          packages: ["g++-6",   "valgrind", "g++-6-multilib",   "libc6-dbg", "libc6-dbg:i386"]
+          sources: *apt_sources
+
+    # GCC 7
+    - env: COMPILER=g++-7 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true ADDITIONAL_CXX_FLAGS=" -fuse-ld=gold"
+      compiler: gcc
+      addons: &gcc7
+        apt:
+          packages: ["g++-7",   "valgrind", "g++-7-multilib",   "libc6-dbg", "libc6-dbg:i386"]
+          sources: *apt_sources
 
     # Clang 3.5
     - env: COMPILER=clang++-3.5 HAS_ASAN_64=true HAS_UBSAN_64=true
@@ -76,6 +143,61 @@ matrix:
           packages: ["clang-3.5", "valgrind", "g++-multilib", "libc6-dbg", "libc6-dbg:i386", "g++-6"]
           sources: *apt_sources
 
+    # Clang 3.6
+    - env: COMPILER=clang++-3.6 HAS_ASAN_64=true HAS_UBSAN_64=true
+      addons: &clang36
+        apt:
+          packages: ["clang-3.6", "valgrind", "g++-multilib", "libc6-dbg", "libc6-dbg:i386", "g++-6"]
+          sources: *apt_sources
+
+    # Clang 3.7
+    - env: COMPILER=clang++-3.7
+      addons: &clang37
+        apt:
+          packages: ["clang-3.7", "valgrind", "g++-multilib", "libc6-dbg", "libc6-dbg:i386", "g++-6"]
+          sources: *apt_sources
+
+    # Clang 3.8
+    - env: COMPILER=clang++-3.8 HAS_ASAN_64=true HAS_UBSAN_64=true
+      addons: &clang38
+        apt:
+          packages: ["clang-3.8", "valgrind", "g++-multilib", "libc6-dbg", "libc6-dbg:i386", "g++-6"]
+          sources: *apt_sources
+
+    # Clang 3.9
+    - env: COMPILER=clang++-3.9 HAS_ASAN_64=true HAS_UBSAN_64=true
+      addons: &clang39
+        apt:
+          packages: ["clang-3.9", "valgrind", "g++-multilib", "libc6-dbg", "libc6-dbg:i386", "g++-6"]
+          sources: *apt_sources
+
+    # Clang 4.0
+    - env: COMPILER=clang++-4.0 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true
+      addons: &clang40
+        apt:
+          packages: ["clang-4.0", "valgrind", "g++-multilib", "libc6-dbg", "libc6-dbg:i386", "g++-6"]
+          sources: *apt_sources
+
+    # Clang 5.0
+    - env: COMPILER=clang++-5.0 HAS_ASAN_32=true HAS_UBSAN_32=true HAS_ASAN_64=true HAS_UBSAN_64=true
+      addons: &clang50
+        apt:
+          packages: ["clang-5.0", "valgrind", "g++-multilib", "libc6-dbg", "libc6-dbg:i386", "g++-6"]
+          sources: *apt_sources
+
+
+
+  allow_failures:
+
+    # GCC 4.5
+    - env: COMPILER=g++-4.5
+      compiler: gcc
+
+    # Clang 3.7
+    - env: COMPILER=clang++-3.7
+
+    # Clang 3.9
+    - env: COMPILER=clang++-3.9 HAS_ASAN_64=true HAS_UBSAN_64=true
 
 
 install:
@@ -112,7 +234,40 @@ install:
   # Install stuff with homebrew under OSX
   ############################################################################
 
-
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      brew update
+      # brew install ccache
+      # brew install valgrind
+      # cmake
+      if brew list -1 | grep -q "^cmake\$"; then
+        brew outdated cmake || brew upgrade cmake
+      else
+        brew install cmake
+      fi
+      # gcc
+      if [[ "${COMPILER}" = "g++-4.6" ]]; then
+        brew install gcc46
+      fi
+      if [[ "${COMPILER}" = "g++-4.7" ]]; then
+        brew install gcc47
+      fi
+      if [[ "${COMPILER}" = "g++-4.8" ]]; then
+        brew install gcc48
+      fi
+      if [[ "${COMPILER}" = "g++-4.9" ]]; then
+        brew install gcc49
+      fi
+      if [[ "${COMPILER}" = "g++-5" ]]; then
+        brew install gcc5
+      fi
+      if [[ "${COMPILER}" = "g++-6" ]]; then
+        brew install gcc6
+      fi
+      if [[ "${COMPILER}" = "g++-7" ]]; then
+        brew install gcc7
+      fi
+    fi
 
   - export CXX="${COMPILER}"
 #  - export CXX="ccache ${COMPILER}"
@@ -132,7 +287,7 @@ script:
       lcov -d . -c -o coverage.info                                              # parse coverage data
       lcov -r coverage.info "/usr*" "$(readlink -f examples)/*" -o coverage.info # remove data for system headers and .cpp files
       lcov -l coverage.info                                                      # just list a short summary of the results
-      coveralls-lcov --repo-token=${COVERALLS_REPO_TOKEN} coverage.info          # upload results
+      coveralls-lcov --repo-token=${JEjhNOGR3fBH0MH3jhGUUgdbHSoIsBuoQ} coverage.info          # upload results
 
       # do not continue with other build configurations after that
       exit
@@ -216,5 +371,3 @@ script:
 
 #after_script:
 #  - cat compile_commands.json
-after_success:
-  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"

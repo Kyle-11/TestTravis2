@@ -1,79 +1,57 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-################################################################################
-## DOCTEST
-################################################################################
 
-file(READ ${CMAKE_CURRENT_SOURCE_DIR}/scripts/version.txt ver)
-project(doctest VERSION ${ver})
-
-option(DOCTEST_WITH_TESTS               "Build tests/examples" ON)
-option(DOCTEST_WITH_MAIN_IN_STATIC_LIB  "Build a static lib (cmake target) with a main entry point" ON)
-
-add_library(${PROJECT_NAME} INTERFACE)
-target_include_directories(${PROJECT_NAME} INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/doctest/>)
-
-################################################################################
-## TESTS/EXAMPLES/HELPERS
-################################################################################
-
-if(${DOCTEST_WITH_MAIN_IN_STATIC_LIB})
-    include(scripts/cmake/common.cmake)
-    doctest_add_library(${PROJECT_NAME}_with_main STATIC EXCLUDE_FROM_ALL doctest/parts/doctest_main.cpp)
-    target_link_libraries(${PROJECT_NAME}_with_main PUBLIC ${PROJECT_NAME})
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    set(CMAKE_CXX_FLAGS         "-Wall -Wno-unknown-pragmas -Wno-sign-compare -Woverloaded-virtual -Wwrite-strings -Wno-unused")
+    set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g3")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 endif()
 
-if(${DOCTEST_WITH_TESTS})
-    include(scripts/cmake/common.cmake)
+include_directories(
+    ${PROJECT_SOURCE_DIR}/src
+    )
 
-    add_subdirectory(examples/all_features)
-    
-    if(NOT DEFINED ENV{CODE_COVERAGE})
-        add_subdirectory(examples/exe_with_static_libs)
-        add_subdirectory(examples/executable_dll_and_plugin)
-        add_subdirectory(scripts/playground)
-    endif()
-endif()
+add_library(
+    mock_class
+    src/mock_class.cpp
+    )
 
-################################################################################
-## PACKAGE SUPPORT
-################################################################################
+set(GOOGLETEST_ROOT external/googletest/googletest CACHE STRING "Google Test source root")
 
-set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+include_directories(
+    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}
+    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/include
+    )
 
-set(include_install_dir "include/doctest/")
-set(config_install_dir "lib/cmake/${PROJECT_NAME}")
+set(GOOGLETEST_SOURCES
+    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/src/gtest-all.cc
+    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/src/gtest_main.cc
+    )
 
-set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
-set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
-set(targets_export_name "${PROJECT_NAME}Targets")
-set(namespace "${PROJECT_NAME}::")
+foreach(_source ${GOOGLETEST_SOURCES})
+    set_source_files_properties(${_source} PROPERTIES GENERATED 1)
+endforeach()
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    "${version_config}" VERSION ${PROJECT_VERSION} COMPATIBILITY SameMajorVersion
-)
+add_library(googletest ${GOOGLETEST_SOURCES})
 
-configure_file("scripts/cmake/Config.cmake.in" "${project_config}" @ONLY)
+add_executable(
+    unit_tests
+    test/main.cpp
+    test/example_add.cpp
+    test/example_subtract.cpp
+    )
 
-install(
-    TARGETS ${PROJECT_NAME}
-    EXPORT "${targets_export_name}"
-    INCLUDES DESTINATION "${include_install_dir}"
-)
+add_dependencies(unit_tests googletest)
 
-install(
-    FILES "doctest/doctest.h"
-    DESTINATION "${include_install_dir}"
-)
+target_link_libraries(
+    unit_tests
+    googletest
+    mock_class
+    pthread
+    )
 
-install(
-    FILES "${project_config}" "${version_config}"
-    DESTINATION "${config_install_dir}"
-)
+include(CTest)
+enable_testing()
 
-install(
-    EXPORT "${targets_export_name}"
-    NAMESPACE "${namespace}"
-    DESTINATION "${config_install_dir}"
-)
+add_test(unit ${PROJECT_BINARY_DIR}/unit_tests)
